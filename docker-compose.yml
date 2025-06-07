@@ -1,0 +1,71 @@
+services:
+  redis:
+    image: "redis:alpine"
+    expose:
+      - 6379
+
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "watchmedo auto-restart --directory=/home/app/web/ --pattern=*.py --recursive -- python manage.py runserver 0.0.0.0:8010"
+    volumes:
+      - ./src:/home/app/web/
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/media
+    expose:
+      - 8010
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+
+  celery:
+    container_name: celery
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A core worker --loglevel=info --uid=nobody
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/media
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+
+  nginx:
+    container_name: nginx
+    build:
+      context: nginx/
+    volumes:
+      - ./src:/home/app/web/
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/media
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
+  db:
+    image: postgis/postgis:15-3.3-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=navisdevs
+      - POSTGRES_PASSWORD=adminadmin
+      - POSTGRES_DB=business
+    depends_on:
+      - redis
+
+volumes:
+  static_volume:
+  media_volume:
+  postgres_data:

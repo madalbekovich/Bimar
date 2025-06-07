@@ -1,0 +1,15 @@
+asgiref
+Django
+djangorestframework
+sqlparse
+django-jazzmin
+spectacular
+Pillow
+qrcode
+celery
+requests
+python-dotenv
+drf-spectacular
+django-ckeditor
+django-filter
+environ
