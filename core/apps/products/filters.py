@@ -15,3 +15,11 @@ class ProductFilter(filters.FilterSet):
     class Meta:
         model = models.Product
         fields = ['is_popular', 'min_price', 'max_price', 'is_new', 'discount_price']
+
+class CategoryFilter(filters.FilterSet):
+    """Сортировка категории"""
+    location = filters.NumberFilter(field_name='location', label='Выбрать филиал')
+
+class PromotionFilter(filters.FilterSet):
+    """Сортировка акции"""
+    location = filters.NumberFilter(field_name='location', label='Выбрать филиал')

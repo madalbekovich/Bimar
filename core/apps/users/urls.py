@@ -13,5 +13,5 @@ urlpatterns = [
     path("reset-password-verify", ResetPasswordVerifyView.as_view(), name="reset-password-verify"),
     path("update-user-detail", UpdateUserDetailView.as_view(), name="update-user-detail"),
     path("notification", NotificationView.as_view(), name="get-notification"),
-    path("delete-account", LogoutView.as_view(), name="delete-account"),
+    path("logout", LogoutView.as_view(), name="delete-account"),
 ]

@@ -93,3 +93,14 @@ class StoreBranch(models.Model):
     def __str__(self):
         return self.address
 
+class FAQ(models.Model):
+    num = models.IntegerField()
+    question = models.CharField(verbose_name='Заголовок', max_length=255)
+    answer = models.TextField(verbose_name='Описание')
+
+    class Meta:
+        verbose_name = 'Вопрос и ответ'
+        verbose_name_plural = 'Вопросы и ответы'
+
+    def __str__(self):
+        return f"{self.question}: {self.answer[:50]}..."

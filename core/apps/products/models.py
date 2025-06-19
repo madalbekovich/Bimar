@@ -1,13 +1,14 @@
-from django.db import models
+﻿from django.db import models
 from . import choices
 from apps.main.models import StoreBranch
 
 class Category(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название")
     img = models.ImageField(upload_to="product/category/%Y_%m", verbose_name="Изображение")
+    location = models.ForeignKey(StoreBranch, on_delete=models.CASCADE, verbose_name='Филиал')
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.id} - {self.name}"
 
     class Meta:
         verbose_name = "Категорию"
@@ -20,6 +21,7 @@ class Product(models.Model):
     is_promotion = models.BooleanField(verbose_name="Товар находится в акции", default=False)
     is_popular = models.BooleanField(verbose_name="Популярный товар", default=False)
     is_new = models.BooleanField(verbose_name="Новый товар", default=False)
+    best_product = models.BooleanField(verbose_name="Хит продаж", default=False)
 
     bonus_count = models.IntegerField(verbose_name='Кл-во бонусов при покупке товара', null=True, blank=True)
     preview_img = models.ImageField(verbose_name="Обложка", upload_to="product/preview_img", null=True, blank=True)
@@ -36,7 +38,7 @@ class Product(models.Model):
     weight = models.CharField(verbose_name="Вес", null=True, blank=True)
     expiration_date = models.CharField(verbose_name="Срок годности", null=True, blank=True)
     nutritional_value = models.CharField(verbose_name="Пищевая ценность", null=True, blank=True)
-    price_for = models.CharField(verbose_name="Цена за", choices=choices.PRICE_FOR_CHOICES, default="шт", max_length=500, editable=False)
+    price_for = models.CharField(verbose_name="Цена за", choices=choices.PRICE_FOR_CHOICES, default="шт", max_length=500, editable=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата последнего изменения", blank=True, null=True)
     from_wh = models.BooleanField(editable=False, default=False)

@@ -179,7 +179,7 @@ class UserInfo(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user_info = UserInfoSerializer(request.user).data
+        user_info = UserInfoSerializer(request.user, context={"request": request}).data
         return Response(user_info)
 
 
@@ -221,13 +221,13 @@ class ChangePasswordView(GenericAPIView):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
-
+            old_password = serializer.data["old_password"]
             password = serializer.data["password"]
             confirm_password = serializer.data["confirm_password"]
-
             if password != confirm_password:
-                return Response({"response": False, "message": _("Пароли не совпадают")})
-
+                return Response({"response": False, "message": _("Пароли не совпадают")}, status=status.HTTP_400_BAD_REQUEST)
+            if not user.check_password(old_password):
+                return Response({"response": False, "message": _("Старый пароль неверный")}, status=status.HTTP_400_BAD_REQUEST)
             user.set_password(password)
             user.save()
 

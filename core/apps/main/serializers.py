@@ -29,3 +29,8 @@ class StoreBranchSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.StoreBranch
         fields = '__all__'
+
+class FAQSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FAQ
+        fields = '__all__'

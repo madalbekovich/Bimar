@@ -1,9 +1,10 @@
 from django.contrib import admin
 from . import models
 
-@admin.register(models.Category)
-class CategoryModelAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name']
+admin.site.register(models.Category)
+# @admin.register(models.Category)
+# class CategoryModelAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'name']
 
 class ProductImgTabularAdmin(admin.TabularInline):
     extra = 1

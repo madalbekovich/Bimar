@@ -6,8 +6,7 @@ from .models import User
 class RegisterSerializers(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True, required=True, min_length=8)
     password = serializers.CharField(write_only=True, required=True, min_length=8)
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
+    username = serializers.CharField(required=True)
     phone = serializers.CharField(
         required=True,
         min_length=17,
@@ -16,7 +15,7 @@ class RegisterSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["phone", "first_name", "last_name", "password", "confirm_password"]
+        fields = ["phone", "username", "password", "confirm_password"]
 
     def validate(self, attrs):
         password = attrs.get("password")
@@ -36,14 +35,12 @@ class RegisterSerializers(serializers.ModelSerializer):
 
     def save(self, **kwargs):
         phone = self.validated_data["phone"]
-        first_name = self.validated_data["first_name"]
-        last_name = self.validated_data["last_name"]
+        username = self.validated_data["username"]
         password = self.validated_data["password"]
 
         user = User(
             phone=phone,
-            first_name=first_name,
-            last_name=last_name
+            username=username
         )
         user.set_password(password)
         user.save()
@@ -96,9 +93,15 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
+    qrimg = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ['username', 'phone']
+        fields = ['username', 'phone', 'qrimg', 'bonus']
+
+    def get_qrimg(self, obj):
+        if obj.qrimg:
+            return self.context['request'].build_absolute_uri(obj.qrimg.url)
+        return None
 
 class UpdatePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(
@@ -118,6 +121,11 @@ class UpdatePasswordSerializer(serializers.Serializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(
+        required=True,
+        min_length=8,
+        error_messages={"min_length": "Не менее 8 символов.", "required": "Это поле обязательно."}
+    )
     password = serializers.CharField(
         required=True,
         min_length=8,

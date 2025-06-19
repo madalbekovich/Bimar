@@ -9,7 +9,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductImage
-        fields = ['img']
+        fields = ['id', 'img']
 
 class ProductListSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True)

@@ -26,7 +26,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return str(self.phone)  # Вернем номер телефона в виде строки
+        return str(self.phone)
 
     def save(self, *args, **kwargs):
         super(User, self).save(*args, **kwargs)

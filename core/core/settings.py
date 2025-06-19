@@ -1,19 +1,15 @@
 from pathlib import Path
 import os
-import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
+SECRET_KEY = 'django-insecure-4)3)kep3tjr7d+a#qj0z+go0^^^ut**fcg(1(u*u$uc!aa=cp!'
 
-SECRET_KEY = env('SECRET_KEY')
 
-DEBUG = env('DEBUG')
+DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080',
-    'https://odigital.pro'
+    # 'https://odigital.pro'
 ]
 
 ALLOWED_HOSTS = ['*']
@@ -29,6 +25,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'ckeditor',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
 
     'apps.users',
@@ -67,7 +64,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
-    'default': env.db(),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'business',
+        'USER': 'navisdevs',
+        'PASSWORD': 'adminadmin',
+        'HOST': 'db',
+        'PORT': '5432',
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -126,3 +130,5 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+BASE_URL = 'http://192.168.0.108:8000/'
