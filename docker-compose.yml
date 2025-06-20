@@ -24,22 +24,22 @@ services:
       - redis
       - db
 
-  celery:
-    container_name: celery
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: celery -A core worker --loglevel=info --uid=nobody
-    volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/media
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    env_file:
-      - .env
-    depends_on:
-      - redis
-      - db
+#  celery:
+#    container_name: celery
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    command: celery -A core worker --loglevel=info --uid=nobody
+#    volumes:
+#      - static_volume:/home/app/web/staticfiles
+#      - media_volume:/home/app/web/media
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+#    env_file:
+#      - .env
+#    depends_on:
+#      - redis
+#      - db
 
   nginx:
     container_name: nginx
