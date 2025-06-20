@@ -5,6 +5,11 @@ services:
       - 6379
 
   web:
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8010" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     container_name: web
     build:
       context: .
@@ -24,23 +29,6 @@ services:
       - redis
       - db
 
-#  celery:
-#    container_name: celery
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    command: celery -A core worker --loglevel=info --uid=nobody
-#    volumes:
-#      - static_volume:/home/app/web/staticfiles
-#      - media_volume:/home/app/web/media
-#    extra_hosts:
-#      - "host.docker.internal:host-gateway"
-#    env_file:
-#      - .env
-#    depends_on:
-#      - redis
-#      - db
-
   nginx:
     container_name: nginx
     build:
@@ -52,7 +40,8 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - web
+      web:
+        condition: service_healthy
 
   db:
     image: postgis/postgis:15-3.3-alpine
