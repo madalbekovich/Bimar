@@ -100,9 +100,9 @@ class SendCodeView(GenericAPIView):
 
         if serializer.is_valid():
             phone = serializer.data["phone"]
-
             try:
                 user = User.objects.get(phone=phone)
+		
             except ObjectDoesNotExist:
                 return Response(
                     {

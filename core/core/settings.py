@@ -9,7 +9,7 @@ DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080',
-    # 'https://odigital.pro'
+    'https://app.bimar.kg'
 ]
 
 ALLOWED_HOSTS = ['*']
@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
+    'admin_extra_buttons',
 
     'apps.users',
     'apps.main',
@@ -49,7 +50,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,22 +64,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'bimar',
-#         'USER': 'navisdevs',
-#         'PASSWORD': 'adminadmin',
-#         'HOST': 'db',
-#         'PORT': '5432',
-#     }
-# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+     'default': {
+         'ENGINE': 'django.db.backends.postgresql',
+         'NAME': 'bimar',
+         'USER': 'navisdevs',
+         'PASSWORD': 'adminadmin',
+         'HOST': 'localhost',
+         'PORT': '5432',
+     }
 }
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -128,7 +129,7 @@ REST_FRAMEWORK = {
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 
-STATIC_URL = '/staticfiles/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'staticfiles'),

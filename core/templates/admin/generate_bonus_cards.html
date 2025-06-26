@@ -1,0 +1,11 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button">Создать</button>
+        <a href="{% url 'admin:users_bonusid_changelist' %}" class="button">Отмена</a>
+    </form>
+{% endblock %}

@@ -13,6 +13,9 @@ class Story(models.Model):
         verbose_name = "История"
         verbose_name_plural = "Истории"
 
+    def __str__(self):
+       return self.title
+
 class StoryVideo(models.Model):
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name="stories")
     url = models.FileField("История", upload_to="stories")
