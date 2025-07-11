@@ -121,11 +121,11 @@ class UpdatePasswordSerializer(serializers.Serializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(
-        required=True,
-        min_length=8,
-        error_messages={"min_length": "Не менее 8 символов.", "required": "Это поле обязательно."}
-    )
+#    old_password = serializers.CharField(
+#        required=True,
+#        min_length=8,
+#        error_messages={"min_length": "Не менее 8 символов.", "required": "Это поле обязательно."}
+#    )
     password = serializers.CharField(
         required=True,
         min_length=8,
@@ -182,3 +182,140 @@ class DeleteAccountSerializer(serializers.ModelSerializer):
         model = User
         fields = "__all__"
 
+class CardScanSerializer(serializers.Serializer):
+    barcode_id = serializers.CharField(
+        required=True,
+        max_length=20,
+        min_length=3,
+        error_messages={
+            "required": "Штрих-код обязателен",
+            "max_length": "Штрих-код слишком длинный",
+            "min_length": "Штрих-код слишком короткий"
+        }
+    )
+
+    def validate_barcode_id(self, value):
+        # Очищаем от лишних символов, оставляем только цифры и буквы
+        cleaned_value = ''.join(c for c in value if c.isalnum())
+        if not cleaned_value:
+            raise serializers.ValidationError("Неверный формат штрих-кода")
+        return cleaned_value
+
+
+class CardPasswordSerializer(serializers.Serializer):
+    barcode_id = serializers.CharField(
+        required=True,
+        error_messages={"required": "Штрих-код обязателен"}
+    )
+    password = serializers.CharField(
+        required=True,
+        min_length=1,
+        error_messages={
+            "required": "Пароль обязателен",
+            "min_length": "Пароль не может быть пустым"
+        }
+    )
+
+    def validate_barcode_id(self, value):
+        return ''.join(c for c in value if c.isalnum())
+
+
+class CardSetPasswordSerializer(serializers.Serializer):
+    barcode_id = serializers.CharField(
+        required=True,
+        error_messages={"required": "Штрих-код обязателен"}
+    )
+    password = serializers.CharField(
+        required=True,
+        min_length=8,
+        error_messages={
+            "required": "Пароль обязателен",
+            "min_length": "Пароль должен содержать минимум 8 символов"
+        }
+    )
+    confirm_password = serializers.CharField(
+        required=True,
+        min_length=8,
+        error_messages={
+            "required": "Подтверждение пароля обязательно",
+            "min_length": "Пароль должен содержать минимум 8 символов"
+        }
+    )
+
+    def validate_barcode_id(self, value):
+        return ''.join(c for c in value if c.isalnum())
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        confirm_password = attrs.get('confirm_password')
+
+        if password != confirm_password:
+            raise serializers.ValidationError("Пароли не совпадают")
+
+        validate_password(password)
+
+        return attrs
+
+
+class CardRegistrationSerializer(serializers.Serializer):
+    barcode_id = serializers.CharField(
+        required=True,
+        error_messages={"required": "Штрих-код обязателен"}
+    )
+    name = serializers.CharField(
+        required=True,
+        max_length=255,
+        min_length=2,
+        error_messages={
+            "required": "Имя обязательно",
+            "max_length": "Имя слишком длинное",
+            "min_length": "Имя слишком короткое"
+        }
+    )
+    phone = serializers.CharField(
+        required=True,
+        min_length=12,
+        error_messages={
+            "required": "Номер телефона обязателен",
+            "min_length": "Введите правильный номер телефона"
+        }
+    )
+    password = serializers.CharField(
+        required=True,
+        min_length=8,
+        error_messages={
+            "required": "Пароль обязателен",
+            "min_length": "Пароль должен содержать минимум 8 символов"
+        }
+    )
+    confirm_password = serializers.CharField(
+        required=True,
+        min_length=8,
+        error_messages={
+            "required": "Подтверждение пароля обязательно",
+            "min_length": "Пароль должен содержать минимум 8 символов"
+        }
+    )
+
+    def validate_barcode_id(self, value):
+        return ''.join(c for c in value if c.isalnum())
+
+    def validate_phone(self, value):
+        cleaned_phone = ''.join(filter(str.isdigit, value))
+        if len(cleaned_phone) < 10:
+            raise serializers.ValidationError("Неверный формат номера телефона")
+        return cleaned_phone
+
+    def validate_name(self, value):
+        return value.strip()
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        confirm_password = attrs.get('confirm_password')
+
+        if password != confirm_password:
+            raise serializers.ValidationError("Пароли не совпадают")
+
+        validate_password(password)
+
+        return attrs

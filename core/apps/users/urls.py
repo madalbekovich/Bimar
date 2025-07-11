@@ -14,4 +14,8 @@ urlpatterns = [
     path("update-user-detail", UpdateUserDetailView.as_view(), name="update-user-detail"),
     path("notification", NotificationView.as_view(), name="get-notification"),
     path("logout", LogoutView.as_view(), name="delete-account"),
+    path('card/scan/', CardScanView.as_view(), name='card-scan'),
+    path('card/password/', CardPasswordView.as_view(), name='card-password'),
+    path('card/set-password/', CardSetPasswordView.as_view(), name='card-set-password'),
+    path('card/registration/', CardRegistrationView.as_view(), name='card-registration'),
 ]

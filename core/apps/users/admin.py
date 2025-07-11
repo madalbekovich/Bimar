@@ -7,10 +7,37 @@ from admin_extra_buttons.decorators import button
 from . import models
 import openpyxl
 from .forms import GenerateBonusCardsForm
+from django.contrib.auth.admin import UserAdmin
 
-
-admin.site.register(models.User)
 admin.site.register(models.BonusCard)
+
+
+
+@admin.register(models.User)
+class UserAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {
+            'fields': ('phone', 'username')
+        }),
+        ('Персональная информация', {
+            'fields': ('first_name', 'last_name', 'email')
+        }),
+        ('Бонусы и QR', {
+            'fields': ('bonus_id', 'bonus', 'qrimg')
+        }),
+        ('Активация и уведомления', {
+            'fields': ('code', 'activated', 'notification')
+        }),
+        ('Источник и ID', {
+            'fields': ('registration_source', 'external_id_1c')
+        }),
+        ('Права доступа', {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+        }),
+        ('Даты', {
+            'fields': ('last_login',)
+        }),
+    )
 
 class BonusIdExtraAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     list_display = ['bonus_id']
