@@ -11,7 +11,6 @@ class ProductObjectSerializer(serializers.Serializer):
     count = serializers.IntegerField(min_value=1)
 
     def to_internal_value(self, data):
-        # Преобразуем count из строки в число, если нужно
         if 'count' in data and isinstance(data['count'], str):
             try:
                 data['count'] = int(data['count'])
@@ -41,8 +40,7 @@ class BonusPurchaseSerializer(serializers.ModelSerializer):
     def validate_product_for_order(self, value):
         """Проверяем существование всех товаров"""
         for item in value:
-            product_id = str(item['product_id'])  # Приводим к строке
-            # Ищем продукт сначала по code, потом по id
+            product_id = str(item['product_id'])
             if not (Product.objects.filter(code=product_id).exists() or
                     Product.objects.filter(id=product_id).exists()):
                 raise ValidationError(f"Товар с кодом/ID {product_id} не найден")
@@ -53,7 +51,6 @@ class BonusPurchaseSerializer(serializers.ModelSerializer):
         products_data = validated_data.pop('product_for_order')
         bonus_id = validated_data.pop('bonus_id')
 
-        # Исправленный поиск пользователя
         bonus_card = BonusCard.objects.get(bonus_id__bonus_id=bonus_id)
         user = bonus_card.user
 
@@ -61,10 +58,9 @@ class BonusPurchaseSerializer(serializers.ModelSerializer):
         purchase_records = []
 
         for item_data in products_data:
-            product_id = str(item_data['product_id'])  # Приводим к строке
+            product_id = str(item_data['product_id'])
             count = item_data['count']
 
-            # Ищем продукт сначала по code, потом по id
             try:
                 product = Product.objects.get(code=product_id)
             except Product.DoesNotExist:
@@ -73,7 +69,6 @@ class BonusPurchaseSerializer(serializers.ModelSerializer):
                 except Product.DoesNotExist:
                     raise ValidationError(f"Товар с кодом/ID {product_id} не найден")
 
-            # Безопасное получение значений с проверкой на None
             product_price = getattr(product, 'price', None) or 0
             product_bonus_count = getattr(product, 'bonus_count', None) or 0
 
