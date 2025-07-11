@@ -8,5 +8,6 @@ router.register(r'wh-bonus', views.BonusPurchaseViewSet, basename='bonus-purchas
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('write-off', views.BonusWriteOff.as_view())
+    path('write-off', views.BonusWriteOff.as_view()),
+    path('current-bonus', views.CurrentBonusView.as_view())
 ]
