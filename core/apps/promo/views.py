@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from apps.users.models import User, BonusCard
 from rest_framework import generics
+from decimal import Decimal
 
 
 class BonusPurchaseViewSet(viewsets.GenericViewSet):
@@ -30,7 +31,6 @@ class BonusPurchaseViewSet(viewsets.GenericViewSet):
 
         except Exception as e:
             print(e)
-            # logger.error(f"Ошибка при обработке покупки: {str(e)}")
             return Response(
                 {"response": False, "error": str(e), "status": "200"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -51,27 +51,24 @@ class BonusWriteOff(generics.GenericAPIView):
             except BonusCard.DoesNotExist:
                 return Response({"response": False, "message": "Пользователь не найден"})
 
-            if queryset:
-                if total is not None and total != '':
-                    if queryset.bonus >= float(total):
-                        queryset.bonus -= float(total)
-                        queryset.save()
-                        return Response(
-                            {"response": True, "message": "Списание успешно выполнено", "bonuses": queryset.bonus})
-                    return Response({"response": False, "message": "Не хватает бонусов для списания"})
-                return Response({"response": False, "message": "Укажите total"})
-            return Response({"response": False, "message": "Пользователь не найден"})
-        return Response({"response": False, "message": "Укажите bonus_id"})
+            if total is not None and total != '':
+                try:
+                    total_decimal = Decimal(total)
+                except:
+                    return Response({"response": False, "message": "Некорректный формат total"})
 
-    @action(detail=False, methods=['get'], url_path='current-bonus')
-    def current_bonus(self, request):
-        bonus_id = self.request.GET.get('bonus_id')
+                if queryset.bonus >= total_decimal:
+                    queryset.bonus -= total_decimal
+                    queryset.save()
+                    return Response({
+                        "response": True,
+                        "message": "Списание успешно выполнено",
+                        "bonuses": queryset.bonus
+                    })
+                return Response({"response": False, "message": "Не хватает бонусов для списания"})
 
-        if bonus_id is not None:
-            user = self.get_queryset().filter(bonus_id=bonus_id).first()
-            if user:
-                return Response({"response": True, "bonuses": user.bonus, "available_bonus": user.bonus * 70 / 100, "birthday": user.birthday, "first_name": user.first_name, "last_name": user.last_name})
-            return Response({"response": False, "message": "Пользователь не найден"})
+            return Response({"response": False, "message": "Укажите total"})
+
         return Response({"response": False, "message": "Укажите bonus_id"})
 
 

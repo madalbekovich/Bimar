@@ -142,3 +142,6 @@ BASE_URL = 'https://app.bimar.kg/'
 
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+APPEND_SLASH = True

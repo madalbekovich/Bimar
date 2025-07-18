@@ -40,12 +40,13 @@ class BonusId(models.Model):
 
 class BonusCard(models.Model):
     user = models.ForeignKey("User", on_delete=models.SET_NULL, null=True, verbose_name='Клиент')
-    bonus_id = models.ForeignKey("BonusId", on_delete=models.CASCADE, verbose_name='Уникальный номер карты')
-
-    phone = models.CharField(max_length=32, null=True, blank=True)
-    first_name = models.CharField(max_length=64, null=True, blank=True)
-    last_name = models.CharField(max_length=64, null=True, blank=True)
-    address = models.CharField(max_length=256, null=True, blank=True)
+    bonus_id = models.ForeignKey("BonusId", on_delete=models.SET_NULL, verbose_name='Уникальный номер карты', null=True, blank=True)
+   # bonus_id = models.ForeignKey(BonusCard, on_delete=models.SET_NULL, null=True, blank=True, related_name='user_bonus')
+    phone = models.CharField(max_length=32, null=True, blank=True, verbose_name='Номер телефона')
+    birth_date = models.DateField(verbose_name='Дата рождения', null=True, blank=True)
+    first_name = models.CharField(max_length=64, null=True, blank=True, verbose_name='Имя')
+    last_name = models.CharField(max_length=64, null=True, blank=True, verbose_name='Фамилия')
+    address = models.CharField(max_length=256, null=True, blank=True, verbose_name='Адрес')
 
     def __str__(self):
         return str(self.bonus_id)
@@ -60,7 +61,7 @@ class User(AbstractUser):
     phone = models.CharField("Номер телефона", unique=True)
     code = models.IntegerField("Код активации", null=True, blank=True)
     activated = models.BooleanField("Активировано", default=False)
-    bonus_id = models.ForeignKey(BonusCard, on_delete=models.CASCADE, null=True, blank=True, related_name='user_bonus')
+    bonus_id = models.ForeignKey(BonusCard, on_delete=models.SET_NULL, null=True, blank=True, related_name='primary_user')
     bonus = models.DecimalField("Бонус пользователя", max_digits=10, decimal_places=2, null=True, blank=True, default=0)
     qrimg = models.ImageField("QRcode Пользователя", null=True, blank=True)
     notification = models.BooleanField("Получать уведомления", default=False)
