@@ -11,4 +11,7 @@ urlpatterns = [
     path('similar/<int:category_id>/', views.SimilarProductView.as_view()),
     path('best/', views.PromoActionProductView.as_view()),
     path('best-all/', views.PromoActionAllProductView.as_view()),
+
+    path('set-featured/', views.SetFeaturedToProductView.as_view()),
+    path('list-featured/', views.FeaturedProductListView.as_view()),
 ]

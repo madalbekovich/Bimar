@@ -15,6 +15,7 @@ CSRF_TRUSTED_ORIGINS = [
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -145,3 +146,75 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 APPEND_SLASH = True
+
+
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Bimar Admin",
+    "site_header": "Bimar",
+    "site_brand": "org",
+    "welcome_sign": "Добро пожаловать в админстративный панель Bimar Admin",
+    "copyright": "Bimar",
+    "site_logo": "logo.png",
+    "site_logo_classes": "img",
+    # "user_avatar": "users.User.avatar",
+    # "user_avatar": "get_user_avatar",
+    # "show_ui_builder": True,
+    # "navigation_expanded": False,
+    # "related_modal_active": False,
+    # "changeform_format": "carousel",
+    "search_model": ["users.User", "products.Product"],
+    # "usermenu_links": [
+    #     {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+    #     {"model": "users.User"}
+    # ],
+    "icons": {
+        "account": "fas fa-users-cog",
+        "users.User": "fas fa-user-friends",
+        "users.BonusId": "fas fa-gift",
+        "users.BonusCard": "fas fa-database",
+        "auth.Group": "fas fa-users",
+        "search.favorites": "fas fa-heart",
+        "main.FAQ": "fas fa-question-circle",
+        "main.News": "fas fa-newspaper",
+        "main.StoreBranch": "fas fa-code-branch",
+        "main.Story": "fas fa-camera",
+        "products.Category": "fas fa-folder",
+        "products.Product": "fas fa-box",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "show_ui_builder": True
+}
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": True,
+    "brand_small_text": False,
+    "brand_colour": "navbar-white",
+    "accent": "accent-primary",
+    "navbar": "navbar-danger navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-danger",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": True,
+    "theme": "simplex",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-outline-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    },
+    "actions_sticky_top": False
+}

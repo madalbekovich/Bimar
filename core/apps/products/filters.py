@@ -23,3 +23,9 @@ class CategoryFilter(filters.FilterSet):
 class PromotionFilter(filters.FilterSet):
     """Сортировка акции"""
     location = filters.NumberFilter(field_name='location', label='Выбрать филиал')
+
+class FeaturedFilter(filters.FilterSet):
+    """Сортировка моя корзина"""
+    location = filters.NumberFilter(field_name='product__location', label='Выбрать филиал')
+    is_on_sale = filters.BooleanFilter(field_name='product__is_on_sale', label='В наличии')
+    discount_percentage = filters.BooleanFilter(field_name='product__discount_percentage', label='Акция')

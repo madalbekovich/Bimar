@@ -1,6 +1,7 @@
 ﻿from django.db import models
 from . import choices
 from apps.main.models import StoreBranch
+from apps.users.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название")
@@ -51,3 +52,17 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     img = models.ImageField(verbose_name="Картинки товара", upload_to="product/images/")
+
+
+
+class FeaturedProduct(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    location = models.ForeignKey(StoreBranch, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        verbose_name = 'Избранное пользователя'
+        verbose_name_plural = 'Избранные пользователей'
+
+    def __str__(self):
+        return f"Пользователь {self.user.username} добавил в корзину {self.product.title}."

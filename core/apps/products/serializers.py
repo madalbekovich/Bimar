@@ -16,3 +16,21 @@ class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Product
         fields = "__all__"
+
+class SetFeaturedProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FeaturedProduct
+        fields = ['product', 'location']
+
+class FeaturedProductListSerializer(serializers.ModelSerializer):
+    preview_img = serializers.SerializerMethodField()
+    price = serializers.CharField(source='product.price', read_only=True)
+    price_for = serializers.CharField(source='product.price_for', read_only=True)
+    class Meta:
+        model = models.FeaturedProduct
+        fields = ['preview_img', 'price', 'price_for', 'product', 'location']
+
+    def get_preview_img(self, obj):
+        if obj.product and obj.product.preview_img:
+            return f"{settings.BASE_URL}media/{obj.product.preview_img}"
+        return None

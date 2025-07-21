@@ -7,6 +7,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from django_filters import rest_framework as rest_filter
 
+from rest_framework.permissions import (
+    IsAuthenticated
+)
+
 class CategoryListView(generics.ListAPIView):
     """Список категорий"""
     queryset = models.Category.objects.all()
@@ -74,3 +78,24 @@ class ProductCategoryListView(generics.ListAPIView):
         if category_id:
             return self.queryset.filter(category=category_id)
         return self.queryset.none()
+
+
+class SetFeaturedToProductView(generics.CreateAPIView):
+    """Добавить товара в корзину"""
+    permission_classes = [IsAuthenticated]
+    queryset = models.FeaturedProduct.objects.all()
+    serializer_class = serializers.SetFeaturedProductSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class FeaturedProductListView(generics.ListAPIView):
+    """Моя корзина"""
+    permission_classes = [IsAuthenticated]
+    queryset = models.FeaturedProduct.objects.all()
+    serializer_class = serializers.FeaturedProductListSerializer
+    filter_backends = (rest_filter.DjangoFilterBackend, )
+    filterset_class = filters.FeaturedFilter
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)

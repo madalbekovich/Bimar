@@ -203,10 +203,10 @@ class UpdatePasswordView(GenericAPIView):
                 return Response({"response": False, "message": _("Пароли не совпадают")})
 
             if not user.check_password(old_password):
-                return Response({"response": False, "message": _("Вы ввели неправильный пароль")})
+                return Response({"response": False, "message": _("Вы ввели неправильный старый пароль")})
 
-            if old_password == password:
-                return Response({"response": False, "message": _("Новый пароль не должен совпадать со старым.")})
+#            if old_password == password:
+#                return Response({"response": False, "message": _("Новый пароль не должен совпадать со старым.")})
 
             user.set_password(password)
             user.save()
